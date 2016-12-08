@@ -1,0 +1,14 @@
+{
+  "100percentfedup.com": {
+    "url": "100percentfedup.com", 
+    "type": "bias"
+  },
+  "washingtonpost.com": {
+    "url": "washingtonpost.com",
+    "type": "TEST"
+  },
+  "newyorktimes.com": {
+    "url": "newyorktimes.com",
+    "type": "TEST"
+  }
+}

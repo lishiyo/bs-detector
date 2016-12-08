@@ -1,0 +1,37 @@
+{
+  "name": "B.S. Detector",
+  "version": "0.2.5",
+  "manifest_version": 2,
+  "default_locale": "en",
+  "description": "Warns users about unreliable news sources.",
+  "homepage_url": "https://github.com/lishiyo/bs-detector.git",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "browser_action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "<all_urls>",
+    "background" //if you want to inject it from a background page
+  ],
+  "background": {
+    "scripts": [
+      "js/background.js"
+    ],
+    "persistent": true
+  },
+  "content_scripts": [ {
+     "css": [ "css/hint.min.css", "css/inject.css"],
+     // "js": [ "js/inject.js" ],
+     "matches": [ "*://*/*" ],
+     "all_frames": true, // get inside iframes
+     "run_at": "document_end" // before window.onload
+  } ],
+  "web_accessible_resources": [
+    "data/data.json",
+    "css/inject.css"
+  ]
+}
