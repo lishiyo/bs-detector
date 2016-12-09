@@ -5,13 +5,66 @@ Extension injects this script into all frames
 Send to extension a deduped list of valid link URLs on this page
 **/
 window.DEMO = {};
-const port = chrome.runtime.connect({name: "links"});
+const port = chrome.runtime.connect({ name: "links" }); // connect immediately
 const CSS_CLASS_GOOD = "good";
 const CSS_CLASS_BAD = "bad";
 
 const anchorNodes = [].slice.apply(document.getElementsByTagName('a'));
-let anchorDomains = [];
 window.DEMO["anchorNodes"] = anchorNodes;
+
+// anchorNodes == anchorDomains same position
+let anchorDomains = getAnchorDomains(anchorNodes);
+console.log("content ++ sending anchorDomains to background.js: ", anchorDomains);
+
+// send the domains if we have any
+if (anchorDomains.length > 0) {
+  port.postMessage({ 
+    action: "anchor_domains", 
+    data: anchorDomains 
+  });
+}
+
+// listen to the extension
+port.onMessage.addListener(function(msg) {
+  // map anchorNodes
+  if (msg.action == "send_processed") {
+    console.log("content ++ got badDomainsMap as data, styling: ", msg.data);
+    styleBadLinks(msg.data);
+  }
+});
+
+// convert array of anchor nodes into their hostnames
+function getAnchorDomains(anchorNodes) {
+  if (typeof anchorNodes === 'undefined' || anchorNodes.length == 0) {
+    return [];
+  }
+
+  return anchorNodes.map(function(element) {
+    return element.hostname;
+  })
+}
+
+// { "www.mybaddomain.com": { url: "mybaddomain.com", type: "conspiracy site"} }
+function styleBadLinks(badDomainsFoundMap) {
+  if (typeof anchorNodes === 'undefined' || anchorNodes.length == 0 || anchorDomains.length == 0) {
+    return;
+  }
+
+  let anchorNode;
+  anchorDomains.forEach(function(domain, index, arr) {
+    anchorNode = anchorNodes[index];
+    // check if this domain is in the bad domains found
+    if (badDomainsFoundMap.hasOwnProperty(domain)) {
+      // add bad css
+      anchorNode.className += " " + CSS_CLASS_BAD;
+    } else {
+      // add good css
+      anchorNode.className += " " + CSS_CLASS_GOOD;
+    }
+  });
+}
+
+// ====== GRAVEYARD =======
 
 // convert array of anchor nodes into their hrefs
 const getAnchorHrefs = function(anchorNodes) {
@@ -30,56 +83,4 @@ const getAnchorHrefs = function(anchorNodes) {
     return href;
   });
 };
-
-// convert array of anchor nodes into their hostnames
-const getAnchorDomains = function(anchorNodes) {
-  if (typeof anchorNodes === 'undefined' || anchorNodes.length == 0) {
-    return [];
-  }
-
-  return anchorNodes.map(function(element) {
-    return element.hostname;
-  })
-}
-
-// { "mybaddomain.com": { reason: "conspiracy site"} }
-const processAnchorDomains = function(rawAnchorDomains, badDomainsFoundMap) {
-  console.log("processAnchorDomains ++ anchorNodes", anchorNodes, badDomainsFoundMap);
-  if (typeof rawAnchorDomains === 'undefined' || rawAnchorDomains.length == 0) {
-    return;
-  }
-
-  let anchorNode;
-  rawAnchorDomains.forEach(function(rawAnchorDomain, index, arr) {
-    anchorNode = anchorNodes[index];
-    // check key inside bad domains found
-    if (badDomainsFoundMap.hasOwnProperty(rawAnchorDomain)) {
-      // add bad css
-      anchorNode.className += " " + CSS_CLASS_BAD;
-    } else {
-      // add good css
-      anchorNode.className += " " + CSS_CLASS_GOOD;
-    }
-  });
-}
-
-// anchorNodes == anchorDomains same position
-anchorDomains = getAnchorDomains(anchorNodes);
-console.log("content ++ sending anchorDomains: ", anchorDomains);
-
-// send the domains only!
-port.postMessage({ 
-  action: "anchorNodes", 
-  data: anchorDomains 
-});
-
-// listen to the extension
-port.onMessage.addListener(function(msg) {
-
-  // map anchorNodes
-  if (msg.action == "send_processed") {
-    console.log("content ++ port got msg: ", msg);
-    processAnchorDomains(anchorDomains, msg.data);
-  }
-});
 
