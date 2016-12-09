@@ -48,16 +48,20 @@
       return;
     }
 
-    let anchorNode;
     anchorDomains.forEach(function(domain, index, arr) {
-      anchorNode = anchorNodes[index];
+      let anchorNode = anchorNodes[index];
       // check if this domain is in the bad domains found
       if (badDomainsFoundMap.hasOwnProperty(domain)) {
         // add bad css
         anchorNode.className += " " + CSS_CLASS_BAD;
+        let badType = badDomainsFoundMap[domain].type;
+        if (!badType) {
+          badType = "unknown";
+        }
+        anchorNode.setAttribute("bad-type", badType);
       } else {
         // add good css
-        anchorNode.className += " " + CSS_CLASS_GOOD;
+        // anchorNode.className += " " + CSS_CLASS_GOOD;
       }
     });
   }
