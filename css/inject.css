@@ -1,11 +1,11 @@
-a.good {
-  background-color: !green;
-  border: 2px solid green;
+a.good, a.good:link, a.good:visited, a.good:hover, a.good:active {
+  background: #00ff00;
+  // border: 2px solid #00ff00;
 }
 
-a.bad {
-  background-color: !#ff0000;
-  border: 2px solid #800000;
+a.bad, a.bad:link, a.bad:visited, a.bad:hover, a.bad:active {
+  background: #CD0000;
+  // border: 2px solid #ff0000;
 }
 
 .bs-alert {
