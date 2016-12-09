@@ -3,9 +3,8 @@
 window.DEMO = {}; // for testing
 
 let BAD_LINKS_MAP = {}; // canonical bad links object
-let badLinksFoundMap; // matched bad domains from anchorDomains
-let anchorDomains; // all raw domains from inject.js
-let firstLoad = true;
+let badLinksFoundMap = {}; // matched bad domains from anchorDomains
+let anchorDomains = []; // all raw domains from inject.js
 
 // populate the worker's bad links map immediately
 let myWorker = new Worker("js/worker.js");
@@ -27,14 +26,12 @@ window.onload = function() {
   chrome.runtime.onConnect.addListener(function(port) {
     port.onMessage.addListener(function(msg) {
       // STUB - only allow for first load for now
-      console.log("port onMessage! firstLoad, msg", firstLoad, msg);
-      if (firstLoad && msg.action == "anchor_domains") {
-        anchorDomains = msg.data;
+      console.log("port onMessage! anchorDomains, msg", anchorDomains, msg.data);
+      if (msg.action == "anchor_domains") {
+        anchorDomains = anchorDomains.concat(msg.data); // append data, don't replace
 
         // got our domains, send to worker to match the bad ones
         sendRawDataToWorker(port, anchorDomains);
-
-        firstLoad = false;
       }
     });
   });
@@ -59,7 +56,8 @@ function sendRawDataToWorker(port, anchorDomainsData) {
   myWorker.onmessage = function(e) {
     console.log('worker onMessage! worker sent badDomainsFoundMap:', e.data.data);
     if (e.data.action == "data_ready") {
-      badLinksFoundMap = e.data.data; 
+      badLinksFoundMap = Object.assign(badLinksFoundMap, e.data.data);
+
       // dump the found bad domains in popup
       showLinks(badLinksFoundMap);
 

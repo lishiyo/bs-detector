@@ -1,7 +1,7 @@
-a.good, a.good:link, a.good:visited, a.good:hover, a.good:active {
-  background: #00ff00;
-  // border: 2px solid #00ff00;
-}
+// a.good, a.good:link, a.good:visited, a.good:hover, a.good:active {
+//   background: #00ff00;
+//   // border: 2px solid #00ff00;
+// }
 
 a.bad, a.bad:link, a.bad:visited, a.bad:hover, a.bad:active {
   background: #CD0000;
@@ -9,7 +9,7 @@ a.bad, a.bad:link, a.bad:visited, a.bad:hover, a.bad:active {
 }
 
 .bs-alert {
-  background: #ff0000;
+  background: #CD0000;
   display: block;
   height: 28px;
   left: 0;
@@ -36,9 +36,9 @@ body.shift {
 
 .bs-alert-inline {
   background: rgba(255, 00, 00, .25);
-  border: 1px solid #800000;
+  border: 1px solid #CD0000;
   border-radius: .25em;
-  color: #800000;
+  color: #CD0000;
   text-align: center;
   margin: 8px 0;
   padding: 4px;
