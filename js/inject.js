@@ -55,10 +55,13 @@
         // add bad css
         anchorNode.className += " " + CSS_CLASS_BAD;
         let badType = badDomainsFoundMap[domain].type;
-        if (!badType) {
+        if (!badType || !badType.length) {
           badType = "unknown";
+          anchorNode.setAttribute("bad-type", '');
+        } else {
+          anchorNode.setAttribute("bad-type", "TYPE: " + badType);
         }
-        anchorNode.setAttribute("bad-type", badType);
+        
       } else {
         // add good css
         // anchorNode.className += " " + CSS_CLASS_GOOD;
