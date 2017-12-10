@@ -1,12 +1,4 @@
 [
-  {"url": "slate.com", "type": "TEST"},
-  {"url": "nytimes.com", "type": "TEST"},
-  {"url": "washingtonpost.com", "type": "TEST"},
-  {"url": "huffingtonpost.com", "type": "TEST"},
-  {"url": "thehill.com", "type": "TEST"},
-  {"url": "motherjones.com", "type": "TEST"},
-  {"url": "reuters.com", "type": "TEST"},
-  {"url": "thetruthdivision.com", "type": "TEST"},
   {"url": "100percentfedup.com", "type": "bias"},
   {"url": "21stcenturywire.com", "type": "conspiracy"},
   {"url": "24extremeworld.com", "type": "fake"},
